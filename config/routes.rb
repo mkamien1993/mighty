@@ -1,3 +1,3 @@
 Rails.application.routes.draw do
-  resources :nfts , only: [:create]
+  resources :nfts , only: [:create, :index]
 end
