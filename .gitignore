@@ -27,5 +27,8 @@
 
 /public/assets
 
+.idea/
+.rspec/
+
 # Ignore master key for decrypting credentials and more.
 /config/master.key
