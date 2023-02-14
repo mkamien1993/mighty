@@ -3,7 +3,7 @@ class Nft < ApplicationRecord
   validates_presence_of :owner_id
 
   has_one_attached :image, :dependent => :destroy
-  before_create :add_owner_id_to_co_creators
+  before_create :add_owner_id_as_co_creator
 
   def co_creators
     creators_ids
@@ -11,7 +11,7 @@ class Nft < ApplicationRecord
 
   private
 
-  def add_owner_id_to_co_creators
-    creators_ids << owner_id
+  def add_owner_id_as_co_creator
+    co_creators << owner_id unless co_creators.include?(owner_id)
   end
 end

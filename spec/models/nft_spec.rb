@@ -46,4 +46,12 @@ RSpec.describe Nft, type: :model do
     expect(nft.co_creators.include?(3)).to eq(true)
     expect(nft.co_creators.include?(4)).to eq(true)
   end
+
+  it 'should not add owner id twice if it is passed as a co creator' do
+    nft = Nft.create!(description: 'Classic NFT', owner_id: 1, creators_ids: [1, 3, 4])
+    expect(nft.co_creators.size).to eq(3)
+    expect(nft.co_creators.include?(1)).to eq(true)
+    expect(nft.co_creators.include?(3)).to eq(true)
+    expect(nft.co_creators.include?(4)).to eq(true)
+  end
 end
