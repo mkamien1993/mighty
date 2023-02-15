@@ -1,7 +1,11 @@
 require 'rails_helper'
 
 RSpec.describe CoCreatorsService do
-  let(:nft) { Nft.create!(description: 'Prueba', owner_id:1) }
+  let(:nft) { Nft.create!(
+    description: 'Prueba',
+    owner_id:1,
+    image: fixture_file_upload("#{Rails.root}/app/assets/images/nft.jpg")
+  ) }
   let(:co_creators_service) { CoCreatorsService.new }
 
   it "should add co-creators ids" do

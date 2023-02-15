@@ -4,7 +4,12 @@ RSpec.describe "NftsRequests", type: :request do
   let(:user) { User.create! }
   let(:second_user) { User.create! }
   let(:third_user) { User.create! }
-  let(:nft) { Nft.create!(description: 'Classic NFT', owner_id: user.id, creators_ids: [second_user.id]) }
+  let(:nft) { Nft.create!(
+    description: 'Classic NFT',
+    owner_id: user.id,
+    creators_ids: [second_user.id],
+    image: fixture_file_upload("#{Rails.root}/app/assets/images/nft.jpg")
+  ) }
 
   describe '#create' do
     let(:image) { fixture_file_upload('app/assets/images/nft.jpg') }
@@ -27,9 +32,12 @@ RSpec.describe "NftsRequests", type: :request do
   describe '#index' do
     before do
       Nft.destroy_all
-      Nft.create!(description: 'First NFT', owner_id: user.id, creators_ids: [second_user.id])
-      Nft.create!(description: 'Second NFT', owner_id: user.id, creators_ids: [second_user.id])
-      Nft.create!(description: 'Third NFT', owner_id: user.id, creators_ids: [second_user.id])
+      Nft.create!(description: 'First NFT', owner_id: user.id, creators_ids: [second_user.id],
+                  image: fixture_file_upload("#{Rails.root}/app/assets/images/nft.jpg"))
+      Nft.create!(description: 'Second NFT', owner_id: user.id, creators_ids: [second_user.id],
+                  image: fixture_file_upload("#{Rails.root}/app/assets/images/nft.jpg"))
+      Nft.create!(description: 'Third NFT', owner_id: user.id, creators_ids: [second_user.id],
+                  image: fixture_file_upload("#{Rails.root}/app/assets/images/nft.jpg"))
     end
 
     it 'should return all the minted NFTs ordered chronologically from newest to oldest' do

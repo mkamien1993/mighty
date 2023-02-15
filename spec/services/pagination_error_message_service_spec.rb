@@ -6,8 +6,8 @@ RSpec.describe PaginationErrorMessageService do
 
   before do
     Nft.destroy_all
-    Nft.create!(description: 'Test', owner_id:1)
-    Nft.create!(description: 'Test 2', owner_id:2)
+    Nft.create!(description: 'Test', owner_id:1, image: fixture_file_upload("#{Rails.root}/app/assets/images/nft.jpg"))
+    Nft.create!(description: 'Test 2', owner_id:2, image: fixture_file_upload("#{Rails.root}/app/assets/images/nft.jpg"))
   end
 
   it "should create the correspondant message" do
