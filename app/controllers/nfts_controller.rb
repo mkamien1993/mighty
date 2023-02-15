@@ -1,6 +1,6 @@
 class NftsController < ApplicationController
   include Pagy::Backend
-  skip_before_action :verify_authenticity_token, only: [:create]
+  skip_before_action :verify_authenticity_token, only: [:create, :buy_nft]
 
   EMPTY_ATTRIBUTES_ERROR_MESSAGE = "Description and owner id are mandatory attributes to create an nft."
   CO_CREATORS_IDS_SEPARATOR = ','
@@ -29,6 +29,16 @@ class NftsController < ApplicationController
   def index
     nfts = pagy(Nft.order(created_at: :desc), page: params[:page], items: params[:nfts_per_page])
     render json: nfts, status: :ok
+  end
+
+  def buy_nft
+    purchase_result = BuyNftService.new.buy_nft(
+      params[:buyer_id].to_i,
+      params[:price].to_f,
+      params[:id].to_i
+    )
+
+    render json: purchase_result.message, status: :ok
   end
 
   private
