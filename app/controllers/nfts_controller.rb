@@ -23,11 +23,17 @@ class NftsController < ApplicationController
       @nft,
       params[:nft][:creators_ids].split(CO_CREATORS_IDS_SEPARATOR).map(&:to_i)
     )
+    @nft = add_image_to_nft_json(@nft) if @nft.image.attached?
     render json: @nft, status: :created
   end
 
   def index
-    nfts = pagy(Nft.order(created_at: :desc), page: params[:page], items: params[:nfts_per_page])
+    nfts = pagy(Nft.order(created_at: :desc).with_attached_image, page: params[:page], items: params[:nfts_per_page])
+
+    nfts[1] = nfts[1].map do |nft|
+      nft.image.attached? ? add_image_to_nft_json(nft) : nft
+    end
+
     render json: nfts, status: :ok
   end
 
@@ -45,5 +51,9 @@ class NftsController < ApplicationController
 
   def nft_params
     params.require(:nft).permit(:description, :owner_id, :image)
+  end
+
+  def add_image_to_nft_json(nft)
+    nft.as_json.merge({ image_url: url_for(nft.image) })
   end
 end
