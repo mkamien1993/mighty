@@ -1,0 +1,151 @@
+---
+openapi: 3.0.1
+info:
+  title: API V1
+  version: v1
+paths:
+  "/nfts":
+    get:
+      summary: List all nfts
+      tags:
+      - nfts
+      parameters:
+      - name: page
+        in: query
+        schema:
+          type: string
+      - name: nfts_per_page
+        in: query
+        schema:
+          type: string
+      responses:
+        '200':
+          description: List of all NFTs minted
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    description:
+                      type: string
+                      nullable: false
+                    owner_id:
+                      type: integer
+                      nullable: false
+                    image_url:
+                      type: string
+                      nullable: false
+                    creators_ids:
+                      type: array
+                      items:
+                        type: integer
+                    created_at:
+                      type: string
+                    updated_at:
+                      type: string
+                  required:
+                  - id
+                  - description
+                  - owner_id
+                  - creators_ids
+                  - creators_ids
+                  - created_at
+                  - updated_at
+    post:
+      summary: Mint nft
+      tags:
+      - nfts
+      parameters: []
+      responses:
+        '201':
+          description: Nft minted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  description:
+                    type: string
+                    nullable: false
+                  owner_id:
+                    type: integer
+                    nullable: false
+                  image_url:
+                    type: string
+                    nullable: false
+                  creators_ids:
+                    type: array
+                    items:
+                      type: integer
+                  created_at:
+                    type: string
+                  updated_at:
+                    type: string
+                required:
+                - id
+                - description
+                - owner_id
+                - creators_ids
+                - image_url
+                - creators_ids
+                - created_at
+                - updated_at
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                description:
+                  type: string
+                  nullable: false
+                owner_id:
+                  type: integer
+                  nullable: false
+                image:
+                  type: file
+                  nullable: false
+                creators_ids:
+                  type: array
+                  items:
+                    type: integer
+              required:
+              - description
+              - owner_id
+              - image
+        required: true
+  "/nfts/{id}/buy":
+    put:
+      summary: Buy nft
+      tags:
+      - nfts
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              schema:
+                type: string
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: integer
+        required: true
+servers:
+- url: https://{defaultHost}
+  variables:
+    defaultHost:
+      default: www.example.com

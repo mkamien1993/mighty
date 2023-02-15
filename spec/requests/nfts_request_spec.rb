@@ -44,10 +44,10 @@ RSpec.describe "NftsRequests", type: :request do
       get '/nfts'
 
       json_response = JSON.parse(response.body)
-      expect(json_response[1].size).to eq(3)
-      expect(json_response[1][0]["description"]).to eq('Third NFT')
-      expect(json_response[1][1]["description"]).to eq('Second NFT')
-      expect(json_response[1][2]["description"]).to eq('First NFT')
+      expect(json_response.size).to eq(3)
+      expect(json_response[0]["description"]).to eq('Third NFT')
+      expect(json_response[1]["description"]).to eq('Second NFT')
+      expect(json_response[2]["description"]).to eq('First NFT')
     end
   end
 
