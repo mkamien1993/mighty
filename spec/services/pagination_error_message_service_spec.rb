@@ -2,13 +2,12 @@ require 'rails_helper'
 
 RSpec.describe PaginationErrorMessageService do
   let(:nfts_per_page) { 5 }
-  let(:nft) { Nft.create!(description: 'Test', owner_id:1) }
-  let(:second_nft) { Nft.create!(description: 'Test 2', owner_id:2) }
   let(:pagination_error_message_service) { PaginationErrorMessageService.new }
 
   before do
-    nft.save!
-    second_nft.save!
+    Nft.destroy_all
+    Nft.create!(description: 'Test', owner_id:1)
+    Nft.create!(description: 'Test 2', owner_id:2)
   end
 
   it "should create the correspondant message" do
