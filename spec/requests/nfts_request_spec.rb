@@ -54,9 +54,27 @@ RSpec.describe "NftsRequests", type: :request do
   end
 
   describe '#buy_nft' do
+    it 'should not buy the nft if the price is not positive' do
+      put "/nfts/#{nft.id}/buy", params: { id: nft.id, buyer_id: user.id, price: -10 }
+      expect(response.body).to eq('Price must be positive.')
+      expect(response).to have_http_status(:ok)
+    end
+
+    it 'should not buy the nft if does not exist an nft with the id provided' do
+      put "/nfts/150/buy", params: { buyer_id: third_user.id, price: 10 }
+      expect(response.body).to eq('It does not exist an NFT with the id provided.')
+      expect(response).to have_http_status(:ok)
+    end
+
     it 'should not buy the nft if it is already the owner' do
       put "/nfts/#{nft.id}/buy", params: { id: nft.id, buyer_id: user.id, price: 100 }
       expect(response.body).to eq('The buyer already own the NFT.')
+      expect(response).to have_http_status(:ok)
+    end
+
+    it 'should not buy the nft if it does not exist a user with the id provided (buyer id)' do
+      put "/nfts/#{nft.id}/buy", params: { id: nft.id, buyer_id: 1000, price: 10 }
+      expect(response.body).to eq('It does not exist a user with the id provided (buyer_id).')
       expect(response).to have_http_status(:ok)
     end
 
