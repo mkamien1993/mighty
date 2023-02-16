@@ -1,5 +1,5 @@
 # README
-![Mighty MarketPlace Logo](https://raw.github.com/mkamien1993/mighty/blob/main/app/assets/images/nft.jpg)
+![Mighty MarketPlace Logo](https://raw.github.com/mkamien1993/mighty/main/mighty.jpeg)
 
 **Mighty** is a backend API for a single-page application like "Opensea" (NFT Marketplace). The API has 3 endpoints:
 - **Mint (create) an NFT**
