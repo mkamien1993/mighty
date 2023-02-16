@@ -1,6 +1,7 @@
 require 'swagger_helper'
 
 RSpec.describe 'nfts', type: :request do
+  include FileHelper
 
   path '/nfts' do
     get('List all nfts') do
@@ -57,7 +58,7 @@ RSpec.describe 'nfts', type: :request do
 
       response '201', 'Nft minted' do
         let(:nft) { { description: 'foo', owner_id: 1,
-                      image: Rack::Test::UploadedFile.new("app/assets/images/nft.jpg", "image/jpg") } }
+                      image: upload_file("app/assets/images/nft.jpg") } }
         schema type: :object,
                properties: {
                  id: { type: :integer },
@@ -90,7 +91,7 @@ RSpec.describe 'nfts', type: :request do
         let(:nft) { Nft.create!(
           description: "Monkey",
           owner_id: owner.id,
-          image: Rack::Test::UploadedFile.new("app/assets/images/nft.jpg", "image/jpg")
+          image: upload_file("app/assets/images/nft.jpg")
         )}
         let(:buyer) { User.create! }
         let(:id) { nft.id.to_s }

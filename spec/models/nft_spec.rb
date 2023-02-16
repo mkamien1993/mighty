@@ -1,10 +1,12 @@
 require 'rails_helper'
 
 RSpec.describe Nft, type: :model do
+  include FileHelper
+
   let(:nft) { Nft.create!(
     description: "Monkey",
     owner_id: 1,
-    image: fixture_file_upload("#{Rails.root}/app/assets/images/nft.jpg")
+    image: upload_file("#{Rails.root}/app/assets/images/nft.jpg")
   ) }
 
   describe 'validations' do
@@ -53,7 +55,7 @@ RSpec.describe Nft, type: :model do
       description: 'Classic NFT',
       owner_id: 1,
       creators_ids: [2, 3, 4],
-      image: fixture_file_upload("#{Rails.root}/app/assets/images/nft.jpg")
+      image: upload_file("#{Rails.root}/app/assets/images/nft.jpg")
     )
     expect(nft.co_creators.size).to eq(4)
     expect(nft.co_creators.include?(1)).to eq(true)
@@ -67,7 +69,7 @@ RSpec.describe Nft, type: :model do
       description: 'Classic NFT',
       owner_id: 1,
       creators_ids: [1, 3, 4],
-      image: fixture_file_upload("#{Rails.root}/app/assets/images/nft.jpg")
+      image: upload_file("#{Rails.root}/app/assets/images/nft.jpg")
     )
     expect(nft.co_creators.size).to eq(3)
     expect(nft.co_creators.include?(1)).to eq(true)
