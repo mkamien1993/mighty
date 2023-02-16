@@ -38,11 +38,11 @@ class NftsController < ApplicationController
   end
 
   def buy_nft
-    purchase_result = BuyNftService.new.buy_nft(
+    purchase_result = BuyNftService.new(
       params[:buyer_id].to_i,
       params[:price].to_f,
       params[:id].to_i
-    )
+    ).buy_nft
 
     render json: purchase_result.message, status: :ok
   end

@@ -2,34 +2,59 @@ class BuyNftService
   OWNER_REVENUE_PERCENTAGE = 0.8
   CO_CREATORS_REVENUE_PERCENTAGE = 0.2
 
-  def buy_nft(buyer_id, price, nft_id)
-    nft = Nft.find(nft_id)
-    return BuyNftResponseStatus::BuyerAlreadyOwnNftStatus.new if buyer_id == nft.owner_id
+  def initialize(buyer_id, price, nft_id)
+    @buyer_id = buyer_id
+    @price = price
+    @nft_id = nft_id
+  end
 
-    buyer = User.find(buyer_id)
-    return BuyNftResponseStatus::NotEnoughMoneyStatus.new unless buyer.has_enough_balance(price)
+  def buy_nft
+    validations_ok = validate_purchase
+    return validations_ok unless validations_ok == true
 
-    subtract_balance_to_buyer(price, buyer)
-    update_owner_balance(price, nft.owner_id)
-    update_co_creators_balance(price, nft.co_creators)
-    update_nft_owner(nft, buyer_id)
+    subtract_balance_to_buyer
+    update_owner_balance
+    update_co_creators_balance
+    update_nft_owner
     BuyNftResponseStatus::SuccessfulPurchaseStatus.new
   end
 
   private
 
-  def subtract_balance_to_buyer(price, buyer)
-    buyer.subtract_balance(price)
+  def validate_purchase
+    return BuyNftResponseStatus::PriceMustBePositiveStatus.new if @price <= 0
+
+    begin
+      @nft = Nft.find(@nft_id)
+    rescue ActiveRecord::RecordNotFound
+      return BuyNftResponseStatus::InvalidNftIdStatus.new
+    end
+
+    return BuyNftResponseStatus::BuyerAlreadyOwnNftStatus.new if @buyer_id == @nft.owner_id
+
+    begin
+      @buyer = User.find(@buyer_id)
+    rescue ActiveRecord::RecordNotFound
+      return BuyNftResponseStatus::InvalidBuyerIdStatus.new
+    end
+
+    return BuyNftResponseStatus::NotEnoughMoneyStatus.new unless @buyer.has_enough_balance(@price)
+    true
   end
 
-  def update_owner_balance(price, nft_owner_id)
-    owner_revenue = OWNER_REVENUE_PERCENTAGE*price
-    owner = User.find(nft_owner_id)
+  def subtract_balance_to_buyer
+    @buyer.subtract_balance(@price)
+  end
+
+  def update_owner_balance
+    owner_revenue = OWNER_REVENUE_PERCENTAGE*@price
+    owner = User.find(@nft.owner_id)
     owner.add_balance(owner_revenue)
   end
 
-  def update_co_creators_balance(price, co_creators)
-    co_creators_total_revenue = CO_CREATORS_REVENUE_PERCENTAGE*price
+  def update_co_creators_balance
+    co_creators = @nft.co_creators
+    co_creators_total_revenue = CO_CREATORS_REVENUE_PERCENTAGE*@price
     co_creator_individual_revenue = co_creators_total_revenue/co_creators.size
 
     co_creators.each do |co_creator|
@@ -37,7 +62,9 @@ class BuyNftService
     end
   end
 
-  def update_nft_owner(nft, buyer_id)
-    nft.update(owner_id: buyer_id)
+  def update_nft_owner
+    @nft.update(owner_id: @buyer_id)
   end
+
+
 end
