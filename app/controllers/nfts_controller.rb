@@ -19,11 +19,14 @@ class NftsController < ApplicationController
 
   def create
     @nft = Nft.create!(nft_params)
+
     CoCreatorsService.new.add_co_creators(
       @nft,
       params[:nft][:creators_ids].split(CO_CREATORS_IDS_SEPARATOR).map(&:to_i)
     ) unless params[:nft][:creators_ids].nil?
+
     @nft = add_image_to_nft_json(@nft)
+
     render json: @nft, status: :created
   end
 

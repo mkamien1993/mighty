@@ -1,5 +1,5 @@
 class User < ApplicationRecord
-  before_create :assign_balance
+  before_create :assign_initial_balance
 
   def subtract_balance(price)
     new_balance = self.balance - price
@@ -17,7 +17,7 @@ class User < ApplicationRecord
 
   private
 
-  def assign_balance
+  def assign_initial_balance
     self.balance = 100
   end
 end

@@ -65,6 +65,4 @@ class BuyNftService
   def update_nft_owner
     @nft.update(owner_id: @buyer_id)
   end
-
-
 end
