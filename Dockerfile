@@ -6,7 +6,6 @@ RUN apt-get update -qq \
 ADD . /mighty
 WORKDIR /mighty
 RUN bundle install
-RUN bundle exec rake db:create db:migrate
 
 EXPOSE 3000
 
