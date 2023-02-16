@@ -11,7 +11,7 @@ services:
       POSTGRES_USER: "${DATABASE_USERNAME}"
   web:
     build: .
-    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rake db:create db:migrate && bundle exec rake db:create db:migrate RAILS_ENV=test && bundle exec rails s -p 3000 -b '0.0.0.0'"
+    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rake db:create db:setup && bundle exec rake db:create db:setup RAILS_ENV=test && bundle exec rails s -p 3000 -b '0.0.0.0'"
     volumes:
       - .:/mighty
     ports:
